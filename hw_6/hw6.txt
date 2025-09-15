@@ -1,0 +1,70 @@
+
+
+[
+    [
+        {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "UserIdGroupPairs": [],
+            "IpRanges": [
+                {
+                    "Description": "SSH My IP",
+                    "CidrIp": "46.128.103.197/32"
+                }
+            ],
+            "Ipv6Ranges": [],
+            "PrefixListIds": []
+        },
+        {
+            "IpProtocol": "tcp",
+            "FromPort": 3306,
+            "ToPort": 3306,
+            "UserIdGroupPairs": [],
+            "IpRanges": [
+                {
+                    "CidrIp": "0.0.0.0/0"
+                }
+            ],
+            "Ipv6Ranges": [],
+            "PrefixListIds": []
+        },
+        {
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443,
+            "UserIdGroupPairs": [],
+            "IpRanges": [
+                {
+                    "CidrIp": "0.0.0.0/0"
+                }
+            ],
+            "Ipv6Ranges": [],
+            "PrefixListIds": []
+        }
+    ]
+]
+
+
+sergeykoryagin@Mac ~ % aws ec2 create-security-group \
+  --group-name 20250915-serhii-sg \
+  --description "Security Group for MySQL and HTTPS and SSH" \
+  --vpc-id vpc-0639eb1e736753a9e
+sg-068a6d802fe1874df    arn:aws:ec2:eu-central-1:600627349446:security-group/sg-068a6d802fe1874df
+
+
+sergeykoryagin@Mac ~ % aws ec2 authorize-security-group-ingress \
+  --group-id sg-068a6d802fe1874df \
+  --protocol tcp \
+  --port 3306 \
+  --cidr 0.0.0.0/0 \
+  --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=mysql}]'
+
+
+sergeykoryagin@Mac ~ % aws ec2 authorize-security-group-ingress \
+  --group-id sg-068a6d802fe1874df \
+  --protocol tcp \
+  --port 443 \
+  --cidr 0.0.0.0/0 \
+  --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=https}]'
+
